@@ -33,7 +33,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _formKey = GlobalKey<FormState>();
+  final _emailKey = GlobalKey<_LoginTextFieldState>();
+  final _passwordKey = GlobalKey<_LoginTextFieldState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -99,70 +100,68 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: LoginTextField(
-              validator: _emailValidator,
-              controller: _emailController,
-              labelText: 'Email',
-              hintText: 'Enter your email',
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: LoginTextField(
+            key: _emailKey,
+            validator: _emailValidator,
+            controller: _emailController,
+            labelText: 'Email',
+            hintText: 'Enter your email',
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: LoginTextField(
-              validator: _passwordValidator,
-              controller: _passwordController,
-              labelText: 'Password',
-              hintText: 'Enter your password',
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: LoginTextField(
+            key: _passwordKey,
+            validator: _passwordValidator,
+            controller: _passwordController,
+            labelText: 'Password',
+            hintText: 'Enter your password',
           ),
-          BlocConsumer<LoginBloc, LoginState>(
-            listener: _loginBlocStateListener,
-            builder: (context, state) {
-              return Container(
-                height: 40,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: FilledButton(
-                  onPressed: () {
-                    if (state is LoginInProgress) {
-                      return;
-                    }
+        ),
+        BlocConsumer<LoginBloc, LoginState>(
+          listener: _loginBlocStateListener,
+          builder: (context, state) {
+            return Container(
+              height: 40,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FilledButton(
+                onPressed: () {
+                  if (state is LoginInProgress) {
+                    return;
+                  }
 
-                    //FIXME: this will break the individual input field
-                    // validation, try fixing this later
-                    bool inputIsValid = _formKey.currentState!.validate();
-                    if (inputIsValid) {
-                      BlocProvider.of<LoginBloc>(context).add(
-                        LoginAttempt(
-                          _emailController.text.trim(),
-                          _passwordController.text.trim(),
+                  bool emailIsValid = _emailKey.currentState!.validate();
+                  bool passwordIsValid = _passwordKey.currentState!.validate();
+                  if (emailIsValid && passwordIsValid) {
+                    BlocProvider.of<LoginBloc>(context).add(
+                      LoginAttempt(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                      ),
+                    );
+                  }
+                },
+                child: state is LoginInProgress
+                    ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
                         ),
-                      );
-                    }
-                  },
-                  child: state is LoginInProgress
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Text('Log In'),
-                ),
-              );
-            },
-          )
-        ],
-      ),
+                      )
+                    : const Text('Log In'),
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 }
@@ -199,6 +198,13 @@ class _LoginTextFieldState extends State<LoginTextField> {
     }
 
     _isFocused = _focusNode.hasFocus;
+  }
+
+  bool validate() {
+    setState(() {
+      _errorText = widget.validator(widget.controller.text);
+    });
+    return _errorText == null;
   }
 
   @override
