@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test_assignment/bloc/login/login_bloc.dart';
+import 'package:flutter_test_assignment/ui/pages/pages.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -48,6 +49,10 @@ class _LoginFormState extends State<LoginForm> {
           ),
           margin: const EdgeInsets.fromLTRB(8, 0, 8, 16),
         ),
+      );
+    } else if (state is LoginSuccess) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const MainPage()),
       );
     }
   }
