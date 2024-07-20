@@ -1,10 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_assignment/data/models/user_model.dart';
+import 'package:flutter_test_assignment/ui/pages/pages.dart';
 
 class MainPage extends StatelessWidget {
   final UserModel user;
 
   const MainPage({super.key, required this.user});
+
+  void showLogoutDialog(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    Scaffold.of(context).closeDrawer();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Log out'),
+          content: Text(
+            'Are you sure you want to logout?',
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.secondary,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: textTheme.labelLarge?.copyWith(
+                  color: colorScheme.secondary,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+              ),
+              child: Text(
+                'Log out',
+                style: textTheme.labelLarge?.copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +80,13 @@ class MainPage extends StatelessWidget {
                 const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: DrawerButton(
-                    icon: Icons.logout,
-                    label: 'Log out',
-                    onPressed: () {
-                      //TODO: Impelement this one later.
-                    },
-                  ),
+                  child: Builder(builder: (context) {
+                    return DrawerButton(
+                      icon: Icons.logout,
+                      label: 'Log out',
+                      onPressed: () => showLogoutDialog(context),
+                    );
+                  }),
                 ),
                 const SizedBox(height: 40),
               ],
