@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
       );
     } else if (state is LoginSuccess) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainPage()),
+        MaterialPageRoute(builder: (_) => MainPage(user: state.user)),
       );
     }
   }

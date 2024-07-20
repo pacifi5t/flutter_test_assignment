@@ -29,6 +29,7 @@ class RandomUserApi {
     return UserModel(
       userData['email'],
       userData['login']?['username'],
+      userData['picture']?['thumbnail'],
     );
   }
 }
