@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test_assignment/data/models/user_model.dart';
 
-typedef ServerErrorException = DioException;
-
 class RandomUserApi {
   final Dio dio;
 
