@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test_assignment/bloc/login/login_bloc.dart';
 import 'package:flutter_test_assignment/ui/color_scheme.dart';
 import 'package:flutter_test_assignment/ui/pages/pages.dart';
 
@@ -20,10 +18,8 @@ class MyApp extends StatelessWidget {
         colorScheme: lightColorScheme,
         useMaterial3: true,
       ),
-      home: BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(LoginInitial()),
-        child: const LoginPage(),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: const LoginPage(),
     );
   }
 }

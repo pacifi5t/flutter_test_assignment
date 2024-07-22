@@ -8,18 +8,18 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const Spacer(flex: 2),
-          Text(
-            'Sign In',
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-          const Spacer(flex: 1),
-          const LoginForm(),
-          const Spacer(flex: 3),
-        ],
+    return BlocProvider(
+      create: (context) => LoginBloc(LoginInitial()),
+      child: Scaffold(
+        body: Column(
+          children: [
+            const Spacer(flex: 2),
+            Text('Sign In', style: Theme.of(context).textTheme.headlineLarge),
+            const Spacer(flex: 1),
+            const LoginForm(),
+            const Spacer(flex: 3),
+          ],
+        ),
       ),
     );
   }
@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
       );
     } else if (state is LoginSuccess) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainPage()),
+        MaterialPageRoute(builder: (_) => MainPage(user: state.user)),
       );
     }
   }

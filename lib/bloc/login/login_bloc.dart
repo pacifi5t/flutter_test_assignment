@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test_assignment/data/apis/random_user_api.dart';
+import 'package:flutter_test_assignment/data/apis/apis.dart';
 import 'package:flutter_test_assignment/data/models/user_model.dart';
 
 part 'login_event.dart';
