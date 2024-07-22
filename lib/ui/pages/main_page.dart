@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test_assignment/bloc/beer_feed/beer_feed_bloc.dart';
@@ -52,6 +54,12 @@ class MainPage extends StatelessWidget {
     );
   }
 
+  void refreshBeerFeed(BuildContext context) {
+    BlocProvider.of<BeerFeedBloc>(context).add(
+      BeerFeedFetch(Random().nextInt(10)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -71,6 +79,18 @@ class MainPage extends StatelessWidget {
               );
             },
           ),
+          actions: [
+            BlocBuilder<BeerFeedBloc, BeerFeedState>(
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: state is! BeerFeedLoadInProgress
+                      ? () => refreshBeerFeed(context)
+                      : null,
+                  icon: const Icon(Icons.refresh),
+                );
+              },
+            )
+          ],
         ),
         drawer: Drawer(
           shape: const RoundedRectangleBorder(
@@ -224,10 +244,7 @@ class UserProfileCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 18,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
           child: Text('Profile', style: textTheme.titleSmall),
         ),
         Padding(
@@ -237,9 +254,7 @@ class UserProfileCard extends StatelessWidget {
               CircleAvatar(
                 radius: 28,
                 foregroundImage: NetworkImage(user.pictureUrl),
-                backgroundImage: const NetworkImage(
-                  imagePlaceHolderUrl,
-                ),
+                backgroundImage: const NetworkImage(imagePlaceHolderUrl),
               ),
               const SizedBox(width: 16),
               Column(
