@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -38,9 +39,12 @@ class MainPage extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                );
+              },
               child: Text(
                 'Log out',
                 style: textTheme.labelLarge?.copyWith(
@@ -70,6 +74,8 @@ class MainPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          backgroundColor: Theme.of(context).colorScheme.background,
+          surfaceTintColor: Colors.transparent,
           title: const Text('List page'),
           leading: Builder(
             builder: (context) {
@@ -220,7 +226,8 @@ class BeerFeedViewLoaded extends StatelessWidget {
         thickness: 3,
         radius: const Radius.circular(21),
         child: ListView(
-          padding: const EdgeInsets.only(right: 6),
+          // For some reason, iOS renders scrollbar a bit differently
+          padding: EdgeInsets.only(right: Platform.isIOS ? 9 : 6),
           children: groups,
         ),
       ),
@@ -257,15 +264,19 @@ class UserProfileCard extends StatelessWidget {
                 backgroundImage: const NetworkImage(imagePlaceHolderUrl),
               ),
               const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(user.username, style: textTheme.bodyLarge),
-
-                  //FIXME: This may overflow if the email is long.
-                  // Don't know how to fix this yet.
-                  Text(user.email, style: textTheme.bodySmall),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(user.username, style: textTheme.bodyLarge),
+                    Text(
+                      user.email,
+                      style: textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               )
             ],
           ),

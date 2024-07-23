@@ -117,6 +117,7 @@ class _LoginFormState extends State<LoginForm> {
           padding: const EdgeInsets.only(bottom: 24),
           child: LoginTextField(
             key: _passwordKey,
+            obscureText: true,
             validator: _passwordValidator,
             controller: _passwordController,
             labelText: 'Password',
@@ -171,6 +172,7 @@ class LoginTextField extends StatefulWidget {
   final String hintText;
   final TextEditingController controller;
   final String? Function(String?) validator;
+  final bool obscureText;
 
   const LoginTextField({
     super.key,
@@ -178,6 +180,7 @@ class LoginTextField extends StatefulWidget {
     required this.hintText,
     required this.controller,
     required this.validator,
+    this.obscureText = false,
   });
 
   @override
@@ -229,6 +232,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
         builder: (context, state) {
           const errorAndHelperTextStyle = TextStyle(fontSize: 12, height: 1.0);
           return TextFormField(
+            obscureText: widget.obscureText,
             controller: widget.controller,
             validator: widget.validator,
             focusNode: _focusNode,
